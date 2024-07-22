@@ -57,6 +57,12 @@ const userExtractor = async (request, response, next) => {
 	next()
 }
 
+export const omitFields = (user, keys) => {
+    return Object.fromEntries(
+        Object.entries(user).filter(([key]) => !keys.includes(key))
+    );
+}
+
 const middleware = {
     requestLogger,
     unknownEndpoint,
