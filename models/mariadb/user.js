@@ -8,7 +8,6 @@ export default class User {
     static getAll = async () =>{
         const users = await prisma.user_accounts.findMany()
         const usersWithOutPassword =  users.map(user => omitFields(user, ['password','id']))
-        console.log(usersWithOutPassword)
         return usersWithOutPassword
     }
 }
