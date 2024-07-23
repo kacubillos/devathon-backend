@@ -1,15 +1,15 @@
 import Router from 'express'
 import { UserController } from '../controllers/user.js'
+import { UserDocument } from '../models/mariadb/user';
 
-
-export const createUserRouter = ({userModel}) => {
+export const createUserRouter = ({ userModel }) => {
 
     const userRouter = Router()
-    const userController = new UserController({userModel})
-    
+    const userController = new UserController({ userModel })
+
     /**
      * @swagger
-     * /api/users:
+     * /api/v1/users:
      *   get:
      *     summary: Get user
      *     description: Retrieves the authenticated user.
@@ -35,7 +35,7 @@ export const createUserRouter = ({userModel}) => {
      */
     userRouter.get('/', userController.getAll)
 
-	return userRouter
+    return userRouter
 }
 
 
