@@ -1,8 +1,11 @@
-import jwt from 'jsonwebtoken';
-import User from '../models/mariadb/user.js';
-import logger from './logger.js';
+import jwt, { JwtPayload } from 'jsonwebtoken'
+import User, { UserDocument } from '../models/mariadb/user'
+import logger from './logger';
+import { NextFunction, Request, Response } from 'express'
+import './custom-request.d.ts';
 
-const requestLogger = (request, _response, next) => {
+
+const requestLogger = (request: Request, _response: Response, next: NextFunction) => {
 	logger.info('Method:', request.method)
 	logger.info('Path:  ', request.path)
 	logger.info('Body:  ', request.body)
@@ -10,11 +13,11 @@ const requestLogger = (request, _response, next) => {
 	next()
 }
 
-const unknownEndpoint = (request, response) => {
+const unknownEndpoint = (request: Request, response: Response) => {
     response.status(404).send({error: 'unkown endpoint'})
 }
 
-const errorHandler = (error, request, response, next) => {
+const errorHandler = (error: Error, request: Request, response: Response, next: NextFunction) => {
     logger.error(error.message)
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id'})
@@ -31,7 +34,7 @@ const errorHandler = (error, request, response, next) => {
     next(error)
 }
 
-const getTokenFrom = request => {
+const getTokenFrom = (request: Request): string | null => {
 	const authorization = request.get('authorization')
 	if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
 		return authorization.substring(7)
@@ -39,25 +42,28 @@ const getTokenFrom = request => {
 	return null
 }
 
-const tokenExtractor = (request, response, next) => {
+const tokenExtractor = (request: Request, response: Response, next: NextFunction) => {
 	request.token = getTokenFrom(request)
 	next()
 }
 
-const userExtractor = async (request, response, next) => {
+const userExtractor = async (request: Request, response: Response, next: NextFunction) => {
 	const token = getTokenFrom(request)
 
 	if (token) {
-    	const decodedToken = jwt.verify(token, process.env.SECRET)
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET as string)
+        if (typeof decodedToken === 'string') {
+            return response.status(401).json({ error: 'token invalid' });
+        }
 		if (!decodedToken.id) {
-    		return response.status(401).json({ error: 'token invalid' })
+    	    return response.status(401).json({ error: 'token invalid' })
     	}
-    	request.user = await User.findById(decodedToken.id,{password:0, __v:0, createdAt:0, updatedAt:0})
+    	request.user = await User.findById(decodedToken.id) as UserDocument
   	}
 	next()
 }
 
-export const omitFields = (user, keys) => {
+export const omitFields = (user: UserDocument, keys: string[]) => {
     return Object.fromEntries(
         Object.entries(user).filter(([key]) => !keys.includes(key))
     );

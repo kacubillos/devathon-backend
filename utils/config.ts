@@ -3,7 +3,11 @@ dotenv.config();
 
 const PORT = process.env.PORT;
 
-const config = {
+interface Config {
+    PORT: string | undefined;
+}
+
+const config: Config = {
     PORT
 }
 
