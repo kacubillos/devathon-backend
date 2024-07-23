@@ -1,5 +1,5 @@
 import { PrismaClient, User_accounts} from '@prisma/client'
-import { omitFields } from '../../utils/middleware.js'
+import { omitFields } from '../../utils/middleware'
 
 export interface UserDocument extends User_accounts {
 

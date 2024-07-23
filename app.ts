@@ -13,7 +13,7 @@ import {createUserRouter} from './routes/user';
 import swagger from './swagger.js';
 
 // Models
-import UserModel from './models/mariadb/user.js';
+import UserModel from './models/mariadb/user';
 
 const app: Express = express();
 swagger(app);

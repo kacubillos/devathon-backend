@@ -5,17 +5,17 @@ const options = {
     swaggerDefinition: {
         openapi: '3.0.0',
         info: {
-            title: 'VaultShield',
+            title: 'Inventory system',
             version: '1.0.0',
             description: '',
         },
         servers: [
             {
-                url: 'http://localhost:3000', // Reemplaza con la URL base de tu API
+                url: 'http://localhost:3000',
             },
         ],
     },
-    apis: ['./routes/*.js'], // Ruta a tus archivos de rutas de Express
+    apis: ['./routes/*.ts'],
 };
 
 const specs = swaggerJsDoc(options);

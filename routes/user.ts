@@ -1,6 +1,6 @@
 import Router from 'express'
-import { UserController } from '../controllers/user.js'
-import { UserDocument } from '../models/mariadb/user';
+import { UserController } from '../controllers/user'
+
 
 export const createUserRouter = ({ userModel }) => {
 

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { UserDocument } from '../models/mariadb/user.js'
+import { UserDocument } from '../models/mariadb/user.ts'
 
 declare global {
     namespace Express {

@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from 'jsonwebtoken'
-import User, { UserDocument } from '../models/mariadb/user.js'
-import logger from './logger.js';
+import User, { UserDocument } from '../models/mariadb/user'
+import logger from './logger';
 import { NextFunction, Request, Response } from 'express'
 import './custom-request.d.ts';
 
