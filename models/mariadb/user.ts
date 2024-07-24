@@ -17,15 +17,13 @@ export default class UserModel {
         return usersWithoutPassword
     }
 
-    static findById = async (id: number)  => {
+    static getById = async (id: number)  => {
         const user = await prisma.user_accounts.findUnique({
             where: {
                 id
             }
         })
-        if (!user) {
-            throw new Error('User not found')
-        }        
+              
         return user
     }
 }

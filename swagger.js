@@ -5,7 +5,7 @@ const options = {
     swaggerDefinition: {
         openapi: '3.0.0',
         info: {
-            title: 'Inventory system',
+            title: 'Inventory System API',
             version: '1.0.0',
             description: '',
         },
