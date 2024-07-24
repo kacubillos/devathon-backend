@@ -1,9 +1,8 @@
 import { PrismaClient, User_accounts} from '@prisma/client'
 import { omitFields } from '../../utils/middleware'
 
-export interface UserDocument extends User_accounts {
-
-} 
+export interface UserDocument extends User_accounts {} 
+export type CreateUserType = Pick<User_accounts, "username" | "password">
 
 const prisma = new PrismaClient()
 
@@ -25,6 +24,13 @@ export default class UserModel {
         })
               
         return user
+    }
+
+    static create = async (user: CreateUserType) => {
+        const createdUser = await prisma.user_accounts.create({
+            data: user
+        })
+        return createdUser
     }
 }
 
