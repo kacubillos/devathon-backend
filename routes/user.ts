@@ -26,7 +26,7 @@ export const createUserRouter = ({ userModel }) => {
      *                  username:
      *                      type: string
      *                  
-     *       401:
+     *       400:
      *         description: Unauthorized
      *       404:
      *         description: User not found
@@ -34,6 +34,7 @@ export const createUserRouter = ({ userModel }) => {
      *         description: Internal server error
      */
     userRouter.get('/', userController.getAll)
+    userRouter.get('/:id', userController.getById)
 
     return userRouter
 }
