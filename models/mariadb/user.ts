@@ -3,11 +3,9 @@ import { omitFields } from '../../utils/middleware'
 
 export interface UserDocument extends User_accounts {} 
 export type CreateUserType = Pick<User_accounts, "username" | "password">
+export type UpdateUserType = Partial<User_accounts>
 
 const prisma = new PrismaClient()
-
-
-
 export default class UserModel {
     
     static getAll = async () => {
@@ -22,7 +20,6 @@ export default class UserModel {
                 id
             }
         })
-              
         return user
     }
 
@@ -32,5 +29,16 @@ export default class UserModel {
         })
         return createdUser
     }
+
+    static update = async (user: UpdateUserType) => {
+        const updatedUser = await prisma.user_accounts.update({
+            data: user,
+            where: {
+                id: user.id
+            }
+        })
+        return updatedUser
+    }
+    
 }
 
