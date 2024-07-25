@@ -7,6 +7,7 @@ import {
 interface UserModelInterface {
   getAll: () => Promise<UserDocument[]>
   getById: (id: number) => Promise<UserDocument>
+  getByUsername: (username: string) => Promise<UserDocument>
   create: (user: CreateUserType) => Promise<UserDocument>
   update: (user: UpdateUserType) => Promise<UserDocument>
   delete: (id: number) => Promise<UserDocument>
@@ -109,6 +110,33 @@ export class UserController {
 
       response.json(updated)
     } catch (error) {
+      response.status(500).json({ error: "Internal server error" })
+    }
+  }
+
+  login = async (request: Request, response: Response): Promise<void> => {
+    try {
+      const { username, password }: CreateUserType = request.body
+      if (!username || !password) {
+        response.status(400).json({ error: "All fields are necessary" })
+        return
+      }
+
+      const user = await this.userModel.getByUsername(username)
+
+      if (!user) {
+        response.status(404).json({ error: "User not found" })
+        return
+      }
+
+      if (user.password != password) {
+        response.status(401).json({ error: "Invalid Password" })
+        return
+      }
+
+      response.status(200).json({ jwt: "example_jwt" })
+    } catch (error) {
+      console.log(error)
       response.status(500).json({ error: "Internal server error" })
     }
   }
