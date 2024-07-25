@@ -1,14 +1,14 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 dotenv.config();
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || "3000";
 
 interface Config {
-    PORT: string | undefined;
+  PORT: string;
 }
 
 const config: Config = {
-    PORT
-}
+  PORT,
+};
 
 export default config;
