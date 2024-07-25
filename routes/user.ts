@@ -62,51 +62,89 @@ export const createUserRouter = ({ userModel }) => {
      */
     userRouter.get('/:id', userController.getById)
     /**
- * @swagger
- * /api/v1/users:
- *   post:
- *     summary: Create user
- *     description: Creates a new user.
- *     requestBody:
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/User'
- *     responses:
- *       '201':
- *         description: Successful response
- *         content:
- *           application/json:    
- *             schema:
- *               type: object
- *               properties:
- *                 username:
- *                   type: string
- *                 id:
- *                   type: string
- *       '400':
- *         description: Unauthorized
- *       '500':
- *         description: Internal server error
- * 
- * components:
- *   schemas:
- *     User:
- *       type: object
- *       required:
- *         - username
- *         - password
- *       properties:
- *         id:
- *           type: integer
- *         username:
- *           type: string
- *         password:
- *           type: string
- */
+     * @swagger
+     * /api/v1/users:
+     *   post:
+     *     summary: Create user
+     *     description: Creates a new user.
+     *     requestBody:
+     *       content:
+     *         application/json:
+     *           schema:
+     *             $ref: '#/components/schemas/User'
+     *     responses:
+     *       '201':
+     *         description: Successful response
+     *         content:
+     *           application/json:    
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 username:
+     *                   type: string
+     *                 id:
+     *                   type: string
+     *       '400':
+     *         description: Unauthorized
+     *       '500':
+     *         description: Internal server error
+     * 
+     * components:
+     *   schemas:
+     *     User:
+     *       type: object
+     *       required:
+     *         - username
+     *         - password
+     *       properties:
+     *         id:
+     *           type: integer
+     *         username:
+     *           type: string
+     *         password:
+     *           type: string
+     */
 
     userRouter.post('/', userController.create)
-
+    /**
+     * @swagger
+     * /api/v1/users/{id}:
+     *   put:
+     *     summary: Update user
+     *     description: Updates the user.
+     *     security:
+     *       - bearerAuth: []
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *     requestBody:
+     *       content:
+     *         application/json:
+     *           schema:
+     *             $ref: '#/components/schemas/User'
+     *     responses:
+     *       '200':
+     *         description: Successful response
+     *         content:
+     *           application/json:    
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 username:
+     *                   type: string
+     *                 id:
+     *                   type: string
+     *       '400':
+     *         description: Unauthorized
+     *       '404':
+     *         description: User not found
+     *       '500':
+     *         description: Internal server error
+     */
+    userRouter.put('/:id', userController.update)
     userRouter.delete('/:id', userController.delete)
     return userRouter
 }
