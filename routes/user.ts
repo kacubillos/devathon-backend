@@ -145,6 +145,30 @@ export const createUserRouter = ({ userModel }) => {
      *         description: Internal server error
      */
     userRouter.put('/:id', userController.update)
+    /**
+ * @swagger
+ * /api/v1/users/{id}:
+ *   delete:
+ *     summary: Delete user
+ *     description: Delete the user.
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '204':
+ *         description: Successful response
+ *       '400':
+ *         description: Unauthorized
+ *       '404':
+ *         description: User not found
+ *       '500':
+ *         description: Internal server error
+ */
     userRouter.delete('/:id', userController.delete)
     return userRouter
 }

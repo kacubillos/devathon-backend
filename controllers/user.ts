@@ -76,7 +76,7 @@ export class UserController {
       }
 
       await this.userModel.delete(userId)
-      response.json({ message: 'User deleted successfully' })
+      response.status(204).json({ message: 'User deleted successfully' })
 
     } catch (error) {
       response.status(500).json({ error: 'Internal server error' })
