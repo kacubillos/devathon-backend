@@ -143,8 +143,9 @@ export const createUserRouter = ({ userModel }) => {
      *         description: User not found
      *       '500':
      *         description: Internal server error
-     */ 
+     */
     userRouter.put('/:id', userController.update)
+    userRouter.delete('/:id', userController.delete)
     return userRouter
 }
 
