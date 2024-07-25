@@ -33,7 +33,7 @@ export const createUserRouter = ({ userModel }) => {
    *       500:
    *         description: Internal server error
    */
-    userRouter.get('/', userController.getAll)
+  userRouter.get("/", userController.getAll)
   /**
    * @swagger
    * /api/v1/users/:id:
@@ -60,7 +60,7 @@ export const createUserRouter = ({ userModel }) => {
    *       500:
    *         description: Internal server error
    */
-    userRouter.get('/:id', userController.getById)
+  userRouter.get("/:id", userController.getById)
   /**
    * @swagger
    * /api/v1/users:
@@ -105,7 +105,7 @@ export const createUserRouter = ({ userModel }) => {
    *           type: string
    */
 
-    userRouter.post('/', userController.create)
+  userRouter.post("/", userController.create)
   /**
    * @swagger
    * /api/v1/users/{id}:
@@ -144,7 +144,7 @@ export const createUserRouter = ({ userModel }) => {
    *       '500':
    *         description: Internal server error
    */
-    userRouter.put('/:id', userController.update)
+  userRouter.put("/:id", userController.update)
   /**
    * @swagger
    * /api/v1/users/{id}:
