@@ -1,7 +1,7 @@
 import { PrismaClient, User_accounts } from "@prisma/client"
 import { omitFields } from "../../utils/middleware"
 
-export interface UserDocument extends User_accounts {}
+export interface UserDocument extends User_accounts { }
 export type CreateUserType = Pick<User_accounts, "username" | "password">
 export type UpdateUserType = Partial<User_accounts>
 
@@ -39,5 +39,13 @@ export default class UserModel {
       }
     })
     return updatedUser
+  }
+  static delete = async (id: number) => {
+    const deletedUser = await prisma.user_accounts.delete({
+      where: {
+        id
+      }
+    })
+    return deletedUser
   }
 }
