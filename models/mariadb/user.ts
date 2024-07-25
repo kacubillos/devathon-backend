@@ -1,7 +1,7 @@
 import { PrismaClient, User_accounts } from "@prisma/client"
 import { omitFields } from "../../utils/middleware"
 
-export interface UserDocument extends User_accounts { }
+export interface UserDocument extends User_accounts {}
 export type CreateUserType = Pick<User_accounts, "username" | "password">
 export type UpdateUserType = Partial<User_accounts>
 
@@ -47,5 +47,13 @@ export default class UserModel {
       }
     })
     return deletedUser
+  }
+  static getByUsername = async (username: string) => {
+    const user = await prisma.user_accounts.findUnique({
+      where: {
+        username
+      }
+    })
+    return user
   }
 }
