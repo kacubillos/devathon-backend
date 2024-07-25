@@ -1,7 +1,5 @@
 {
   "editor.formatOnSave": true,
   "eslint.enable": true,
-  "window.zoomLevel":-1,
-  "terminal.integrated.fontSize": 16,
   "editor.tabSize": 2
 }
