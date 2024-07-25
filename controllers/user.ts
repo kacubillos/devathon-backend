@@ -1,4 +1,4 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import {
   UserDocument,
   CreateUserType,
@@ -20,12 +20,24 @@ export class UserController {
     this.userModel = userModel
   }
 
-  getAll = async (_request: Request, response: Response): Promise<void> => {
-    const users = await this.userModel.getAll()
-    response.json(users)
+  getAll = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const users = await this.userModel.getAll()
+      response.json(users)
+    } catch (error) {
+      next(error)
+    }
   }
 
-  getById = async (request: Request, response: Response): Promise<void> => {
+  getById = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const userId = parseInt(request.params.id, 10)
 
@@ -42,11 +54,15 @@ export class UserController {
 
       response.json(user)
     } catch (error) {
-      response.status(500).json({ error: "Internal server error" })
+      next(error)
     }
   }
 
-  create = async (request: Request, response: Response): Promise<void> => {
+  create = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { username, password } = request.body
 
@@ -64,11 +80,15 @@ export class UserController {
         .status(201)
         .json({ message: "User created successfully", user: createdUser })
     } catch (error) {
-      response.status(500).json({ error: "Internal server error" })
+      next(error)
     }
   }
 
-  delete = async (request: Request, response: Response): Promise<void> => {
+  delete = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const userId = parseInt(request.params.id, 10)
 
@@ -86,11 +106,15 @@ export class UserController {
       await this.userModel.delete(userId)
       response.status(204).json({ message: "User deleted successfully" })
     } catch (error) {
-      response.status(500).json({ error: "Internal server error" })
+      next(error)
     }
   }
 
-  update = async (request: Request, response: Response): Promise<void> => {
+  update = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const userId = parseInt(request.params.id, 10)
       const { username, password } = request.body
@@ -117,7 +141,7 @@ export class UserController {
 
       response.json(updated)
     } catch (error) {
-      response.status(500).json({ error: "Internal server error" })
+      next(error)
     }
   }
 }

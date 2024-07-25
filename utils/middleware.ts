@@ -3,7 +3,7 @@ import User, { UserDocument } from "../models/mariadb/user"
 import logger from "./logger"
 import { NextFunction, Request, Response } from "express"
 import "./custom-request.d.ts"
-import CryptoJS from "crypto-js"
+import { createCustomError } from "./customError"
 
 const requestLogger = (
   request: Request,
@@ -27,19 +27,23 @@ const errorHandler = (
   response: Response,
   next: NextFunction
 ) => {
-  logger.error(error.message)
+  logger.error("Middleware: ErrorHandler : ", error.message, error.name)
+
   if (error.name === "CastError") {
     return response.status(400).send({ error: "malformatted id" })
   } else if (error.name === "ValidationError") {
     return response.status(400).json({ error: error.message })
   } else if (error.name === "JsonWebTokenError") {
-    return response.status(400).json({ error: "token missing or invalid" })
+    return response.status(401).json({ error: error.message })
   } else if (error.name === "TokenExpiredError") {
     return response.status(401).json({
       error: "token expired"
     })
+  } else {
+    return response.status(500).json({
+      error: "Internal Server Error"
+    })
   }
-
   next(error)
 }
 
@@ -65,19 +69,26 @@ const userExtractor = async (
   response: Response,
   next: NextFunction
 ) => {
-  const token = getTokenFrom(request)
+  try {
+    const token = getTokenFrom(request)
 
-  if (token) {
+    if (!token) {
+      throw createCustomError("token missing or invalid", "JsonWebTokenError")
+    }
+
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET as string)
     if (typeof decodedToken === "string") {
-      return response.status(401).json({ error: "token invalid" })
+      throw createCustomError("token invalid", "JsonWebTokenError")
     }
     if (!decodedToken.id) {
-      return response.status(401).json({ error: "token invalid" })
+      throw createCustomError("token invalid", "JsonWebTokenError")
     }
     request.user = (await User.getById(decodedToken.id)) as UserDocument
+
+    next()
+  } catch (error) {
+    next(error)
   }
-  next()
 }
 
 export const omitFields = (user: UserDocument, keys: string[]) => {
