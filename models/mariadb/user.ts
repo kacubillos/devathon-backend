@@ -32,5 +32,14 @@ export default class UserModel {
         })
         return createdUser
     }
+
+    static delete = async (id: number) => {
+        const deletedUser = await prisma.user_accounts.delete({
+            where: {
+                id
+            }
+        })
+        return deletedUser
+    }
 }
 

@@ -7,6 +7,7 @@ export class UserController {
         getAll: () => Promise<UserDocument[]>
         getById: (id: number) => Promise<UserDocument>
         create: (user: CreateUserType) => Promise<UserDocument>
+        delete: (id: number) => Promise<UserDocument>
       };
 
     constructor({ userModel }  ) {
@@ -57,4 +58,28 @@ export class UserController {
         response.status(500).json({ error: 'Internal server error' })
       }
     }
+
+    delete = async (request: Request, response: Response): Promise<void> => {
+      try {
+        const userId = parseInt(request.params.id, 10)
+
+        if (isNaN(userId)) {
+          response.status(400).json({ error: 'Invalid user ID' })
+          return
+        }
+
+        const deletedUser = await this.userModel.getById(userId)
+        if (!deletedUser) {
+          response.status(404).json({ error: 'User not found' })
+          return
+        }
+
+        await this.userModel.delete(userId)
+        response.json({ message: 'User deleted successfully' })
+
+      } catch (error) {
+        response.status(500).json({ error: 'Internal server error' })
+      }
+    }
+
 }
