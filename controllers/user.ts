@@ -1,17 +1,11 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import {
-  UserDocument,
   CreateUserType,
-  UpdateUserType
+  UpdateUserType,
+  UserModelInterface
 } from "../models/mariadb/user"
-interface UserModelInterface {
-  getAll: () => Promise<UserDocument[]>
-  getById: (id: number) => Promise<UserDocument>
-  getByUsername: (username: string) => Promise<UserDocument>
-  create: (user: CreateUserType) => Promise<UserDocument>
-  update: (user: UpdateUserType) => Promise<UserDocument>
-  delete: (id: number) => Promise<UserDocument>
-}
+import { hashPassword } from "../utils/password-utils"
+import { createCustomError, CustomError } from "../utils/customError"
 
 export class UserController {
   private userModel: UserModelInterface
@@ -20,82 +14,113 @@ export class UserController {
     this.userModel = userModel
   }
 
-  getAll = async (_request: Request, response: Response): Promise<void> => {
-    const users = await this.userModel.getAll()
-    response.json(users)
+  getAll = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const users = await this.userModel.getAll()
+      response.json(users)
+    } catch (error) {
+      next(error)
+    }
   }
 
-  getById = async (request: Request, response: Response): Promise<void> => {
+  getById = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const userId = parseInt(request.params.id, 10)
 
       if (isNaN(userId)) {
-        response.status(400).json({ error: "Invalid user ID" })
+        throw CustomError.Unauthorized("Invalid user ID")
         return
       }
 
       const user = await this.userModel.getById(userId)
       if (!user) {
-        response.status(404).json({ error: "User not found" })
+        throw CustomError.NotFound("User not found")
         return
       }
 
       response.json(user)
     } catch (error) {
-      response.status(500).json({ error: "Internal server error" })
+      next(error)
     }
   }
-  create = async (request: Request, response: Response): Promise<void> => {
+
+  create = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const { username, password } = request.body
 
       if (!username || !password) {
-        response.status(400).json({ error: "Missing required fields" })
+        throw CustomError.BadRequest("Missing required fields")
         return
       }
 
-      const newUser: CreateUserType = { username, password }
+      const hashedPassword = await hashPassword(password)
+
+      const newUser: CreateUserType = { username, password: hashedPassword }
       const createdUser = await this.userModel.create(newUser)
-      response.status(201).json(createdUser)
+
+      response
+        .status(201)
+        .json({ message: "User created successfully", user: createdUser })
     } catch (error) {
-      response.status(500).json({ error: "Internal server error" })
+      next(error)
     }
   }
-  delete = async (request: Request, response: Response): Promise<void> => {
+
+  delete = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const userId = parseInt(request.params.id, 10)
 
       if (isNaN(userId)) {
-        response.status(400).json({ error: 'Invalid user ID' })
+        throw CustomError.Unauthorized("Invalid user ID")
         return
       }
 
       const deletedUser = await this.userModel.getById(userId)
       if (!deletedUser) {
-        response.status(404).json({ error: 'User not found' })
+        throw CustomError.NotFound("User not found")
         return
       }
 
       await this.userModel.delete(userId)
-      response.status(204).json({ message: 'User deleted successfully' })
-
+      response.status(204).json({ message: "User deleted successfully" })
     } catch (error) {
-      response.status(500).json({ error: 'Internal server error' })
+      next(error)
     }
   }
-  update = async (request: Request, response: Response): Promise<void> => {
+
+  update = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ): Promise<void> => {
     try {
       const userId = parseInt(request.params.id, 10)
       const { username, password } = request.body
 
       if (isNaN(userId)) {
-        response.status(400).json({ error: "Invalid user ID" })
+        throw CustomError.Unauthorized("Invalid user ID")
         return
       }
 
       const user = await this.userModel.getById(userId)
       if (!user) {
-        response.status(404).json({ error: "User not found" })
+        throw CustomError.NotFound("User not found")
         return
       }
       const data = {
@@ -110,34 +135,7 @@ export class UserController {
 
       response.json(updated)
     } catch (error) {
-      response.status(500).json({ error: "Internal server error" })
-    }
-  }
-
-  login = async (request: Request, response: Response): Promise<void> => {
-    try {
-      const { username, password }: CreateUserType = request.body
-      if (!username || !password) {
-        response.status(400).json({ error: "All fields are necessary" })
-        return
-      }
-
-      const user = await this.userModel.getByUsername(username)
-
-      if (!user) {
-        response.status(404).json({ error: "User not found" })
-        return
-      }
-
-      if (user.password != password) {
-        response.status(401).json({ error: "Invalid Password" })
-        return
-      }
-
-      response.status(200).json({ jwt: "example_jwt" })
-    } catch (error) {
-      console.log(error)
-      response.status(500).json({ error: "Internal server error" })
+      next(error)
     }
   }
 }

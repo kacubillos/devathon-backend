@@ -1,9 +1,18 @@
 import { PrismaClient, User_accounts } from "@prisma/client"
 import { omitFields } from "../../utils/middleware"
 
-export interface UserDocument extends User_accounts { }
+export interface UserDocument extends User_accounts {}
 export type CreateUserType = Pick<User_accounts, "username" | "password">
 export type UpdateUserType = Partial<User_accounts>
+
+export interface UserModelInterface {
+  getAll: () => Promise<UserDocument[]>
+  getById: (id: number) => Promise<UserDocument>
+  create: (user: CreateUserType) => Promise<UserDocument>
+  update: (user: UpdateUserType) => Promise<UserDocument>
+  delete: (id: number) => Promise<UserDocument>
+  getByUsername: (username: string) => Promise<UserDocument>
+}
 
 const prisma = new PrismaClient()
 export default class UserModel {
@@ -19,15 +28,6 @@ export default class UserModel {
     const user = await prisma.user_accounts.findUnique({
       where: {
         id
-      }
-    })
-    return user
-  }
-
-  static getByUsername = async (username: string) => {
-    const user = await prisma.user_accounts.findUnique({
-      where: {
-        username
       }
     })
     return user
@@ -56,5 +56,13 @@ export default class UserModel {
       }
     })
     return deletedUser
+  }
+  static getByUsername = async (username: string) => {
+    const user = await prisma.user_accounts.findUnique({
+      where: {
+        username
+      }
+    })
+    return user
   }
 }
