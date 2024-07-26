@@ -24,6 +24,15 @@ export default class UserModel {
     return user
   }
 
+  static getByUsername = async (username: string) => {
+    const user = await prisma.user_accounts.findUnique({
+      where: {
+        username
+      }
+    })
+    return user
+  }
+
   static create = async (user: CreateUserType) => {
     const createdUser = await prisma.user_accounts.create({
       data: user
