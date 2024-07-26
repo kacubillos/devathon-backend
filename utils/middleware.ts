@@ -1,7 +1,7 @@
-import jwt, { JwtPayload } from "jsonwebtoken"
+import jwt from "jsonwebtoken"
 import User, { UserDocument } from "../models/mariadb/user"
 import logger from "./logger"
-import e, { NextFunction, Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
 import "./custom-request.d.ts"
 import { createCustomError } from "./customError"
 
@@ -103,6 +103,7 @@ const userExtractor = async (
     }
 
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET as string)
+
     if (typeof decodedToken === "string") {
       throw createCustomError("token invalid", "JsonWebTokenError")
     }
@@ -124,9 +125,7 @@ export const omitFields = (user: UserDocument, keys: string[]) => {
 }
 
 export const generateAccessToken = (user: UserDocument) => {
-  return jwt.sign({ id: user.id }, process.env.JWT_SECRET as string, {
-    expiresIn: process.env.JWT_EXPIRES_IN as string
-  })
+  return jwt.sign({ id: user.id }, process.env.JWT_SECRET as string)
 }
 
 const middleware = {

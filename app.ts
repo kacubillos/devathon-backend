@@ -7,6 +7,7 @@ import middleware from "./utils/middleware"
 
 // Router
 import { createUserRouter } from "./routes/user"
+import { createAuthRouter } from "./routes/auth"
 
 // Swagger
 import swagger from "./swagger"
@@ -23,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.disable("x-powered-by")
 
 // Routes
-
+app.use("/api/v1/auth", createAuthRouter({ userModel: UserModel }))
 app.use(
   "/api/v1/users",
   middleware.userExtractor,

@@ -1,18 +1,11 @@
 import { NextFunction, Request, Response } from "express"
 import {
-  UserDocument,
   CreateUserType,
-  UpdateUserType
+  UpdateUserType,
+  UserModelInterface
 } from "../models/mariadb/user"
 import { hashPassword } from "../utils/password-utils"
 import { createCustomError, CustomError } from "../utils/customError"
-export interface UserModelInterface {
-  getAll: () => Promise<UserDocument[]>
-  getById: (id: number) => Promise<UserDocument>
-  create: (user: CreateUserType) => Promise<UserDocument>
-  update: (user: UpdateUserType) => Promise<UserDocument>
-  delete: (id: number) => Promise<UserDocument>
-}
 
 export class UserController {
   private userModel: UserModelInterface
