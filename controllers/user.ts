@@ -5,7 +5,8 @@ import {
   UpdateUserType
 } from "../models/mariadb/user"
 import { hashPassword } from "../utils/password-utils"
-interface UserModelInterface {
+import { createCustomError, CustomError } from "../utils/customError"
+export interface UserModelInterface {
   getAll: () => Promise<UserDocument[]>
   getById: (id: number) => Promise<UserDocument>
   create: (user: CreateUserType) => Promise<UserDocument>
@@ -42,13 +43,13 @@ export class UserController {
       const userId = parseInt(request.params.id, 10)
 
       if (isNaN(userId)) {
-        response.status(400).json({ error: "Invalid user ID" })
+        throw CustomError.Unauthorized("Invalid user ID")
         return
       }
 
       const user = await this.userModel.getById(userId)
       if (!user) {
-        response.status(404).json({ error: "User not found" })
+        throw CustomError.NotFound("User not found")
         return
       }
 
@@ -67,7 +68,7 @@ export class UserController {
       const { username, password } = request.body
 
       if (!username || !password) {
-        response.status(400).json({ error: "Missing required fields" })
+        throw CustomError.BadRequest("Missing required fields")
         return
       }
 
@@ -93,13 +94,13 @@ export class UserController {
       const userId = parseInt(request.params.id, 10)
 
       if (isNaN(userId)) {
-        response.status(400).json({ error: "Invalid user ID" })
+        throw CustomError.Unauthorized("Invalid user ID")
         return
       }
 
       const deletedUser = await this.userModel.getById(userId)
       if (!deletedUser) {
-        response.status(404).json({ error: "User not found" })
+        throw CustomError.NotFound("User not found")
         return
       }
 
@@ -120,13 +121,13 @@ export class UserController {
       const { username, password } = request.body
 
       if (isNaN(userId)) {
-        response.status(400).json({ error: "Invalid user ID" })
+        throw CustomError.Unauthorized("Invalid user ID")
         return
       }
 
       const user = await this.userModel.getById(userId)
       if (!user) {
-        response.status(404).json({ error: "User not found" })
+        throw CustomError.NotFound("User not found")
         return
       }
       const data = {

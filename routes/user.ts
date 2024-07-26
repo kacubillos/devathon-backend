@@ -1,7 +1,12 @@
 import Router from "express"
 import { UserController } from "../controllers/user"
+import { UserModelInterface } from "../controllers/user"
 
-export const createUserRouter = ({ userModel }) => {
+export const createUserRouter = ({
+  userModel
+}: {
+  userModel: UserModelInterface
+}) => {
   const userRouter = Router()
   const userController = new UserController({ userModel })
 
