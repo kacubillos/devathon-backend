@@ -35,7 +35,7 @@ export const createAuthRouter = ({ userModel }: CreateAuthRouterProps) => {
    *           application/json:
    *             schema:
    *              properties:
-   *                  jwt:
+   *                  token:
    *                      type: string
    *       '400':
    *         description: All fields are necessary
