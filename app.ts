@@ -8,12 +8,14 @@ import middleware from "./utils/middleware"
 // Router
 import { createUserRouter } from "./routes/user"
 import { createAuthRouter } from "./routes/auth"
+import { createSupplierRouter } from "./routes/supplier"
 
 // Swagger
 import swagger from "./swagger"
 
 // Models
 import UserModel from "./models/mariadb/user"
+import SupplierModel from "./models/mariadb/supplier"
 
 const app: Express = express()
 swagger(app)
@@ -29,6 +31,11 @@ app.use(
   "/api/v1/users",
   middleware.userExtractor,
   createUserRouter({ userModel: UserModel })
+)
+app.use(
+  "/api/v1/supplier",
+  middleware.userExtractor,
+  createSupplierRouter({ supplierModel: SupplierModel })
 )
 
 // Middlewares
