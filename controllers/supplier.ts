@@ -124,7 +124,7 @@ export class SupplierController {
     next: NextFunction
   ) => {
     try {
-      const { name }: { name: string } = request.body
+      const name: string = request.params.name
 
       if (!name) {
         throw CustomError.BadRequest("All data is required")
@@ -148,13 +148,37 @@ export class SupplierController {
     next: NextFunction
   ) => {
     try {
-      const { location }: { location: string } = request.body
+      const location: string = request.params.location
 
       if (!location) {
         throw CustomError.BadRequest("All data is required")
       }
 
       const supplier = await this.supplierModel.getByLocation(location)
+
+      if (!supplier) {
+        throw CustomError.NotFound("Supplier not found")
+      }
+
+      response.status(200).json(supplier)
+    } catch {
+      next(error)
+    }
+  }
+
+  getByContact = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const contact: string = request.params.contact
+
+      if (!contact) {
+        throw CustomError.BadRequest("All data is required")
+      }
+
+      const supplier = await this.supplierModel.getByContact(contact)
 
       if (!supplier) {
         throw CustomError.NotFound("Supplier not found")
