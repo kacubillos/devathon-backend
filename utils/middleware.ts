@@ -4,7 +4,7 @@ import logger from "./logger"
 import { NextFunction, Request, Response } from "express"
 import "./custom-request.d.ts"
 import { createCustomError } from "./customError"
-
+import { errorHandler, boomErrorHandler } from "./errorHandler"
 export const HTTP_STATUS = {
   BAD_REQUEST: 400,
   UNAUTHORIZED: 401,
@@ -28,50 +28,6 @@ const unknownEndpoint = (request: Request, response: Response) => {
   response.status(404).send({ error: "unkown endpoint" })
 }
 
-const errorHandler = (
-  error: Error,
-  request: Request,
-  response: Response,
-  next: NextFunction
-) => {
-  logger.error("Middleware: ErrorHandler : ", error.message, error.name)
-
-  switch (error.name) {
-    case "CastError":
-      return response
-        .status(HTTP_STATUS.BAD_REQUEST)
-        .send({ error: "malformatted id" })
-    case "ValidationError":
-      return response
-        .status(HTTP_STATUS.BAD_REQUEST)
-        .json({ error: error.message })
-    case "JsonWebTokenError":
-      return response
-        .status(HTTP_STATUS.UNAUTHORIZED)
-        .json({ error: error.message })
-    case "TokenExpiredError":
-      return response.status(HTTP_STATUS.UNAUTHORIZED).json({
-        error: "token expired"
-      })
-    case "BadRequest":
-      return response.status(HTTP_STATUS.BAD_REQUEST).json({
-        error: error.message
-      })
-    case "Unauthorized":
-      return response.status(HTTP_STATUS.UNAUTHORIZED).json({
-        error: error.message
-      })
-    case "NotFound":
-      return response.status(HTTP_STATUS.NOT_FOUND).json({
-        error: error.message
-      })
-    default:
-      return response.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({
-        error: "Internal Server Error"
-      })
-  }
-  next(error)
-}
 
 const getTokenFrom = (request: Request): string | null => {
   const authorization = request.get("authorization")
@@ -131,6 +87,7 @@ export const generateAccessToken = (user: UserDocument) => {
 const middleware = {
   requestLogger,
   unknownEndpoint,
+  boomErrorHandler,
   errorHandler,
   tokenExtractor,
   userExtractor
