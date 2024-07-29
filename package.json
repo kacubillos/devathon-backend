@@ -11,6 +11,7 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@hapi/boom": "^10.0.1",
     "@prisma/client": "^5.17.0",
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
@@ -19,6 +20,7 @@
     "ejs": "^3.1.10",
     "express": "^4.19.2",
     "express-async-error": "^0.0.2",
+    "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "tsconfig-paths": "^4.2.0"
   },

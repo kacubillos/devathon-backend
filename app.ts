@@ -33,6 +33,7 @@ app.use(
 )
 
 // Middlewares
+app.use(middleware.boomErrorHandler)
 app.use(middleware.errorHandler)
 app.use(middleware.unknownEndpoint)
 
