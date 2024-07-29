@@ -24,8 +24,11 @@ const requestLogger = (
   next()
 }
 
-const unknownEndpoint = (request: Request, response: Response) => {
-  response.status(404).send({ error: "unkown endpoint" })
+const unknownEndpoint = (_request: Request, response: Response) => {
+  response.status(404).render("error", {
+    message: "Error: Unkown endpoint",
+    error: { status: 404, stack: "" }
+  })
 }
 
 const errorHandler = (
