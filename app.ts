@@ -27,11 +27,11 @@ app.disable("x-powered-by")
 app.use("/api/v1/auth", createAuthRouter({ userModel: UserModel }))
 app.use(
   "/api/v1/users",
-  middleware.userExtractor,
   createUserRouter({ userModel: UserModel })
 )
 
 // Middlewares
+app.use(middleware.boomErrorHandler)
 app.use(middleware.errorHandler)
 app.use(middleware.unknownEndpoint)
 

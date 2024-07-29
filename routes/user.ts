@@ -1,6 +1,8 @@
 import Router from "express"
 import { UserController } from "../controllers/user"
 import { UserModelInterface } from "../models/mariadb/user"
+import { validatorHandler } from "../utils/validatorHandler"
+import userSchema from "../schemas/user"
 
 interface CreateUserRouterProps {
   userModel: UserModelInterface
@@ -62,7 +64,7 @@ export const createUserRouter = ({ userModel }: CreateUserRouterProps) => {
    *       500:
    *         description: Internal server error
    */
-  userRouter.get("/:id", userController.getById)
+  userRouter.get("/:id", validatorHandler(userSchema.get, "params"), userController.getById)
   /**
    * @swagger
    * /api/v1/users:
@@ -106,7 +108,7 @@ export const createUserRouter = ({ userModel }: CreateUserRouterProps) => {
    *         password:
    *           type: string
    */
-  userRouter.post("/", userController.create)
+  userRouter.post("/", validatorHandler(userSchema.create, "body"), userController.create)
   /**
    * @swagger
    * /api/v1/users/{id}:
@@ -145,7 +147,7 @@ export const createUserRouter = ({ userModel }: CreateUserRouterProps) => {
    *       '500':
    *         description: Internal server error
    */
-  userRouter.put("/:id", userController.update)
+  userRouter.put("/:id", validatorHandler(userSchema.get, "params"), validatorHandler(userSchema.update, "body"), userController.update)
   /**
    * @swagger
    * /api/v1/users/{id}:
@@ -170,6 +172,7 @@ export const createUserRouter = ({ userModel }: CreateUserRouterProps) => {
    *       '500':
    *         description: Internal server error
    */
-  userRouter.delete("/:id", userController.delete)
+  userRouter.delete("/:id", validatorHandler(userSchema.delete, "params"), userController.delete)
+
   return userRouter
 }

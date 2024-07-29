@@ -5,7 +5,7 @@ import {
   UserModelInterface
 } from "../models/mariadb/user"
 import { hashPassword } from "../utils/password-utils"
-import { createCustomError, CustomError } from "../utils/customError"
+import boom from "@hapi/boom"
 
 export class UserController {
   private userModel: UserModelInterface
@@ -36,13 +36,13 @@ export class UserController {
       const userId = parseInt(request.params.id, 10)
 
       if (isNaN(userId)) {
-        throw CustomError.Unauthorized("Invalid user ID")
+        throw boom.unauthorized("Invalid user ID")
         return
       }
 
       const user = await this.userModel.getById(userId)
       if (!user) {
-        throw CustomError.NotFound("User not found")
+        throw boom.notFound("User not found")
         return
       }
 
@@ -61,7 +61,7 @@ export class UserController {
       const { username, password } = request.body
 
       if (!username || !password) {
-        throw CustomError.BadRequest("Missing required fields")
+        throw boom.badRequest("Missing required fields")
         return
       }
 
@@ -87,13 +87,13 @@ export class UserController {
       const userId = parseInt(request.params.id, 10)
 
       if (isNaN(userId)) {
-        throw CustomError.Unauthorized("Invalid user ID")
+        throw boom.unauthorized("Invalid user ID")
         return
       }
 
       const deletedUser = await this.userModel.getById(userId)
       if (!deletedUser) {
-        throw CustomError.NotFound("User not found")
+        throw boom.notFound("User not found")
         return
       }
 
@@ -114,15 +114,16 @@ export class UserController {
       const { username, password } = request.body
 
       if (isNaN(userId)) {
-        throw CustomError.Unauthorized("Invalid user ID")
+        throw boom.unauthorized("Invalid user ID")
         return
       }
 
       const user = await this.userModel.getById(userId)
       if (!user) {
-        throw CustomError.NotFound("User not found")
+        throw boom.notFound("User not found")
         return
       }
+      // TODO: add hash to password
       const data = {
         id: userId,
         username,
