@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from "express"
 import "./custom-request.d.ts"
 import { createCustomError } from "./customError"
 
-const HTTP_STATUS = {
+export const HTTP_STATUS = {
   BAD_REQUEST: 400,
   UNAUTHORIZED: 401,
   NOT_FOUND: 404,
