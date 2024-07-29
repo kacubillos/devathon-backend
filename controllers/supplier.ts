@@ -4,14 +4,22 @@ import {
   UpdateSupplierType,
   SupplierModelInterface
 } from "../models/mariadb/supplier"
-import { request } from "http"
 import { CustomError } from "../utils/customError"
-import { json } from "body-parser"
+import { error } from "console"
 
 export class SupplierController {
   private supplierModel: SupplierModelInterface
   constructor({ supplierModel }: { supplierModel: SupplierModelInterface }) {
     this.supplierModel = supplierModel
+  }
+
+  getAll = async (request: Request, response: Response, next: NextFunction) => {
+    try {
+      const suppliers = await this.supplierModel.getAll()
+      response.status(200).json(suppliers)
+    } catch (error) {
+      next(error)
+    }
   }
 
   getById = async (
@@ -106,6 +114,54 @@ export class SupplierController {
       await this.supplierModel.delete(id)
       response.status(200).json({ message: "Supplier deleted successfully" })
     } catch (error) {
+      next(error)
+    }
+  }
+
+  getByName = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { name }: { name: string } = request.body
+
+      if (!name) {
+        throw CustomError.BadRequest("All data is required")
+      }
+
+      const supplier = await this.supplierModel.getByName(name)
+
+      if (!supplier) {
+        throw CustomError.NotFound("Supplier not found")
+      }
+
+      response.status(200).json(supplier)
+    } catch {
+      next(error)
+    }
+  }
+
+  getByLocation = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { location }: { location: string } = request.body
+
+      if (!location) {
+        throw CustomError.BadRequest("All data is required")
+      }
+
+      const supplier = await this.supplierModel.getByLocation(location)
+
+      if (!supplier) {
+        throw CustomError.NotFound("Supplier not found")
+      }
+
+      response.status(200).json(supplier)
+    } catch {
       next(error)
     }
   }

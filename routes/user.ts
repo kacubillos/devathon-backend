@@ -67,6 +67,8 @@ export const createUserRouter = ({ userModel }: CreateUserRouterProps) => {
    * @swagger
    * /api/v1/users:
    *   post:
+   *     tags:
+   *       - user
    *     summary: Create user
    *     description: Creates a new user.
    *     requestBody:
@@ -110,6 +112,8 @@ export const createUserRouter = ({ userModel }: CreateUserRouterProps) => {
    * @swagger
    * /api/v1/users:
    *   get:
+   *     tags:
+   *       - user
    *     summary: Get user
    *     description: Retrieves all users.
    *     security:
@@ -137,6 +141,8 @@ export const createUserRouter = ({ userModel }: CreateUserRouterProps) => {
    * @swagger
    * /api/v1/users/:id:
    *   get:
+   *     tags:
+   *       - user
    *     summary: Get user by id
    *     description: Retrieves the user.
    *     security:
@@ -164,6 +170,8 @@ export const createUserRouter = ({ userModel }: CreateUserRouterProps) => {
    * @swagger
    * /api/v1/users:
    *   post:
+   *     tags:
+   *       - user
    *     summary: Create user
    *     description: Creates a new user.
    *     requestBody:
@@ -209,6 +217,8 @@ export const createUserRouter = ({ userModel }: CreateUserRouterProps) => {
    * @swagger
    * /api/v1/users/{id}:
    *   put:
+   *     tags:
+   *       - user
    *     summary: Update user
    *     description: Updates the user.
    *     security:
@@ -248,6 +258,8 @@ export const createUserRouter = ({ userModel }: CreateUserRouterProps) => {
    * @swagger
    * /api/v1/users/{id}:
    *   delete:
+   *     tags:
+   *       - user
    *     summary: Delete user
    *     description: Delete the user.
    *     security:

@@ -33,7 +33,7 @@ app.use(
   createUserRouter({ userModel: UserModel })
 )
 app.use(
-  "/api/v1/supplier",
+  "/api/v1/suppliers",
   middleware.userExtractor,
   createSupplierRouter({ supplierModel: SupplierModel })
 )

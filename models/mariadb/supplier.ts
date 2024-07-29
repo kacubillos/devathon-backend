@@ -6,6 +6,7 @@ export type CreateSupplierType = Pick<Supplier, "name" | "location" | "contact">
 export type UpdateSupplierType = Partial<Supplier>
 
 export interface SupplierModelInterface {
+  getAll: () => Promise<Supplier[]>
   getById: (id: number) => Promise<Supplier>
   getByName: (name: string) => Promise<Supplier[]>
   getByLocation: (location: string) => Promise<Supplier[]>
@@ -15,6 +16,10 @@ export interface SupplierModelInterface {
   delete: (id: number) => Promise<Supplier>
 }
 export default class SupplierModel {
+  static getAll = async () => {
+    const suppliers = await prisma.supplier.findMany()
+    return suppliers
+  }
   static getById = async (id: number) => {
     const supplier = await prisma.supplier.findUnique({
       where: {
