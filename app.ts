@@ -22,6 +22,7 @@ app.use(cors({ credentials: true, origin: true }))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.disable("x-powered-by")
+app.set("view engine", "ejs")
 
 // Routes
 app.use("/api/v1/auth", createAuthRouter({ userModel: UserModel }))
