@@ -10,6 +10,7 @@ export const createAuthRouter = ({ userModel }: CreateAuthRouterProps) => {
   const authRouter = Router()
   const authController = new AuthController({ userModel })
 
+
   /**
    * @swagger
    * /api/v1/users/login:
