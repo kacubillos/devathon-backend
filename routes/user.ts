@@ -103,10 +103,18 @@ export const createUserRouter = ({ userModel }: CreateUserRouterProps) => {
    *       properties:
    *         id:
    *           type: integer
+   *           description: Unique identifier for the user
    *         username:
    *           type: string
+   *           minLength: 3
+   *           maxLength: 30
+   *           description: Username for the user, between 3 and 30 characters
    *         password:
    *           type: string
+   *           minLength: 6
+   *           maxLength: 50
+   *           description: Password for the user, between 6 and 50 characters
+
    */
   userRouter.post("/", validatorHandler(userSchema.create, "body"), userController.create)
   /**
