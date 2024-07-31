@@ -69,6 +69,8 @@ export const createUserRouter = ({ userModel }: CreateUserRouterProps) => {
    * @swagger
    * /api/v1/users:
    *   post:
+   *     tags:
+   *       - user
    *     summary: Create user
    *     description: Creates a new user.
    *     requestBody:
@@ -111,16 +113,14 @@ export const createUserRouter = ({ userModel }: CreateUserRouterProps) => {
    *           description: Username for the user, between 3 and 30 characters
    *         password:
    *           type: string
-   *           minLength: 6
-   *           maxLength: 50
-   *           description: Password for the user, between 6 and 50 characters
-
    */
   userRouter.post("/", validatorHandler(userSchema.create, "body"), userController.create)
   /**
    * @swagger
    * /api/v1/users/{id}:
    *   put:
+   *     tags:
+   *       - user
    *     summary: Update user
    *     description: Updates the user.
    *     security:
@@ -160,6 +160,8 @@ export const createUserRouter = ({ userModel }: CreateUserRouterProps) => {
    * @swagger
    * /api/v1/users/{id}:
    *   delete:
+   *     tags:
+   *       - user
    *     summary: Delete user
    *     description: Delete the user.
    *     security:

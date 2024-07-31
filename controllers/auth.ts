@@ -26,7 +26,7 @@ export class AuthController {
       const user = await this.userModel.getByUsername(username)
 
       if (!user) {
-        throw CustomError.NotFound("User not fount")
+        throw CustomError.NotFound("User not found")
         return
       }
 
