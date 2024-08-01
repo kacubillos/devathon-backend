@@ -17,7 +17,15 @@ export interface UserModelInterface {
 const prisma = new PrismaClient()
 export default class UserModel {
   static getAll = async () => {
-    const users = await prisma.user_accounts.findMany()
+    const users = await prisma.user_accounts.findMany({
+      include: {
+        user_details: {
+          include: {
+            role: true
+          }
+        }
+      }
+    })
     const usersWithoutPassword = users.map((user) =>
       omitFields(user, ["password"])
     )
