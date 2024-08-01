@@ -1,6 +1,6 @@
 import { PrismaClient, Category } from "@prisma/client"
-type CreateCategoryType = Pick<Category, "name" | "description">
-type UpdateCategoryType = Partial<Category>
+export type CreateCategoryType = Pick<Category, "name" | "description">
+export type UpdateCategoryType = Partial<Category>
 
 const prisma = new PrismaClient()
 
