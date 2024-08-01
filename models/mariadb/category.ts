@@ -1,9 +1,16 @@
 import { PrismaClient, Category } from "@prisma/client"
-
 type CreateCategoryType = Pick<Category, "name" | "description">
-type UpdateCategoryTYpe = Partial<Category>
+type UpdateCategoryType = Partial<Category>
 
 const prisma = new PrismaClient()
+
+export interface CategoryModelInteface {
+  getById: (id: number) => Promise<Category>
+  getAll: () => Promise<Category[]>
+  create: (data: CreateCategoryType) => Promise<Category>
+  delete: (id: number) => Promise<Category>
+  update: (data: UpdateCategoryType) => Promise<Category>
+}
 
 export default class CategoryModel {
   static getById = async (id: number) => {
@@ -32,7 +39,7 @@ export default class CategoryModel {
     })
     return category
   }
-  static update = async (data: UpdateCategoryTYpe) => {
+  static update = async (data: UpdateCategoryType) => {
     const category = prisma.category.update({
       data,
       where: {
