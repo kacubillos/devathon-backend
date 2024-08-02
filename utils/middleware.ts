@@ -31,7 +31,6 @@ const unknownEndpoint = (_request: Request, response: Response) => {
   })
 }
 
-
 const getTokenFrom = (request: Request): string | null => {
   const authorization = request.get("authorization")
   if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
@@ -77,9 +76,17 @@ const userExtractor = async (
   }
 }
 
-export const omitFields = (user: UserDocument, keys: string[]) => {
+export const omitFields = (
+  user: UserDocument,
+  keys: string[]
+): Partial<UserDocument> => {
   return Object.fromEntries(
-    Object.entries(user).filter(([key]) => !keys.includes(key))
+    Object.entries(user).map(([key, value]) => {
+      if (keys.includes(key)) {
+        return [key, ""]
+      }
+      return [key, value]
+    })
   )
 }
 
