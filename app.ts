@@ -9,6 +9,7 @@ import middleware from "./utils/middleware"
 import { createUserRouter } from "./routes/user"
 import { createAuthRouter } from "./routes/auth"
 import { createSupplierRouter } from "./routes/supplier"
+import { createCategoryRoutes } from "./routes/category"
 import { createRoleRouter } from "./routes/role"
 
 // Swagger
@@ -17,6 +18,7 @@ import swagger from "./swagger"
 // Models
 import UserModel from "./models/mariadb/user"
 import SupplierModel from "./models/mariadb/supplier"
+import CategoryModel from "./models/mariadb/category"
 import RoleModel from "./models/mariadb/roles"
 
 const app: Express = express()
@@ -42,10 +44,15 @@ app.use(
 )
 
 app.use(
-  "/api/v1/roles",
+  "/api/v1/categories",
+  middleware.userExtractor,
+  createCategoryRoutes({ categoryModel: CategoryModel })
+ )
+
+app.use( "/api/v1/roles",
   middleware.userExtractor,
   createRoleRouter({ roleModel: RoleModel })
-)
+ )
 
 // Middlewares
 app.use(middleware.boomErrorHandler)
