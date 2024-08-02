@@ -12,5 +12,11 @@ export const createCategoryRoutes = ({
   const categoryRouter = Router()
   const categoryController = new CategoryController({ categoryModel })
 
+  categoryRouter.get("/", categoryController.getAll)
+  categoryRouter.get("/:id", categoryController.getById)
+  categoryRouter.post("/", categoryController.create)
+  categoryRouter.delete("/:id", categoryController.delete)
+  categoryRouter.put("/:id", categoryController.update)
+
   return categoryRouter
 }
