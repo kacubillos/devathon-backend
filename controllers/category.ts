@@ -43,6 +43,52 @@ export class CategoryController {
     }
   }
 
+  getByName = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const name = request.params.name
+
+      if (!name) {
+        throw CustomError.Unauthorized("Invalid category name")
+      }
+
+      const category = await this.categoryModel.getByName(name)
+
+      if (category.length == 0) {
+        throw CustomError.NotFound("Category not found")
+      }
+      response.status(200).json(category)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  getByDescription = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const description = request.params.description
+
+      if (!description) {
+        throw CustomError.Unauthorized("Invalid category Description")
+      }
+
+      const category = await this.categoryModel.getByDescription(description)
+
+      if (category.length == 0) {
+        throw CustomError.NotFound("Category not found")
+      }
+      response.status(200).json(category)
+    } catch (error) {
+      next(error)
+    }
+  }
+
   create = async (request: Request, response: Response, next: NextFunction) => {
     try {
       const { name, description }: CreateCategoryType = request.body

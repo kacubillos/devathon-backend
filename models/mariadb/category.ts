@@ -10,6 +10,8 @@ export interface CategoryModelInteface {
   create: (data: CreateCategoryType) => Promise<Category>
   delete: (id: number) => Promise<Category>
   update: (data: UpdateCategoryType) => Promise<Category>
+  getByName: (name: string) => Promise<Category[]>
+  getByDescription: (description: string) => Promise<Category[]>
 }
 
 export default class CategoryModel {
@@ -46,6 +48,28 @@ export default class CategoryModel {
         id: data.id
       }
     })
+    return category
+  }
+  static getByName = async (name: string) => {
+    const category = await prisma.category.findMany({
+      where: {
+        name: {
+          contains: name
+        }
+      }
+    })
+
+    return category
+  }
+  static getByDescription = async (description: string) => {
+    const category = await prisma.category.findMany({
+      where: {
+        description: {
+          contains: description
+        }
+      }
+    })
+
     return category
   }
 }
