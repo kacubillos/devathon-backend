@@ -1,23 +1,31 @@
 import { PrismaClient, User_accounts } from "@prisma/client"
-import { omitFields } from "../../utils/middleware"
+import { omitFields, mapToUserDocument } from "../../utils/middleware"
 
 export interface UserDocument extends User_accounts {}
 export type CreateUserType = Pick<User_accounts, "username" | "password">
 export type UpdateUserType = Partial<User_accounts>
 
 export interface UserModelInterface {
-  getAll: () => Promise<UserDocument[]>
-  getById: (id: number) => Promise<UserDocument>
+  getAll: () => Promise<Partial<UserDocument>[]>
+  getById: (id: number) => Promise<UserDocument | null>
   create: (user: CreateUserType) => Promise<UserDocument>
   update: (user: UpdateUserType) => Promise<UserDocument>
   delete: (id: number) => Promise<UserDocument>
-  getByUsername: (username: string) => Promise<UserDocument>
+  getByUsername: (username: string) => Promise<UserDocument | null>
 }
 
 const prisma = new PrismaClient()
 export default class UserModel {
   static getAll = async () => {
-    const users = await prisma.user_accounts.findMany()
+    const users = await prisma.user_accounts.findMany({
+      include: {
+        user_details: {
+          include: {
+            role: true
+          }
+        }
+      }
+    })
     const usersWithoutPassword = users.map((user) =>
       omitFields(user, ["password"])
     )
