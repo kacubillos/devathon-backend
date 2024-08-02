@@ -24,6 +24,7 @@ model User_details {
   description String?
   notes       String?
   user_account_id Int        @unique
+  profile_filename String @db.LongText
   role_id Int @unique 
   user_account User_accounts @relation(fields: [user_account_id], references: [id])
   role Roles @relation(fields: [role_id], references: [id])
