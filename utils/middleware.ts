@@ -5,6 +5,9 @@ import { NextFunction, Request, Response } from "express"
 import "./custom-request.d.ts"
 import { createCustomError } from "./customError"
 import { errorHandler, boomErrorHandler } from "./errorHandler"
+import multer from "multer"
+import uuid from "uuid"
+
 export const HTTP_STATUS = {
   BAD_REQUEST: 400,
   UNAUTHORIZED: 401,
@@ -94,13 +97,31 @@ export const generateAccessToken = (user: UserDocument) => {
   return jwt.sign({ id: user.id }, process.env.JWT_SECRET as string)
 }
 
+// ✅ TODO: create a file to save the interfaces
+interface RequestStorage extends Request {
+  filename: string
+}
+const storage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, "/files")
+  },
+  filename(req: RequestStorage, file, cb) {
+    const name = uuid.v4()
+    req.filename = name
+    cb(null, name)
+  }
+})
+
+export const upload = multer({ storage })
+
 const middleware = {
   requestLogger,
   unknownEndpoint,
   boomErrorHandler,
   errorHandler,
   tokenExtractor,
-  userExtractor
+  userExtractor,
+  upload
 }
 
 export default middleware
