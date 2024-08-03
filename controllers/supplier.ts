@@ -92,7 +92,7 @@ export class SupplierController {
 
       const updatedSupplier = await this.supplierModel.update(data)
 
-      response.status(200).json({ supplier: updatedSupplier })
+      response.status(204).json({ supplier: updatedSupplier })
     } catch (error) {
       next(error)
     }
@@ -112,7 +112,7 @@ export class SupplierController {
       }
 
       await this.supplierModel.delete(id)
-      response.status(200).json({ message: "Supplier deleted successfully" })
+      response.status(204).json({ message: "Supplier deleted successfully" })
     } catch (error) {
       next(error)
     }

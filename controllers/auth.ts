@@ -37,7 +37,7 @@ export class AuthController {
       }
 
       const token = generateAccessToken(user)
-      response.json({ token })
+      response.status(200).json({ token })
     } catch (error) {
       next(error)
     }

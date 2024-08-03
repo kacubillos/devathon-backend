@@ -126,7 +126,7 @@ export class CategoryController {
       }
 
       this.categoryModel.delete(id)
-      response.status(200).json({ message: "Supplier deleted successfully" })
+      response.status(204).json({ message: "Supplier deleted successfully" })
     } catch (error) {
       next(error)
     }
@@ -156,7 +156,7 @@ export class CategoryController {
 
       const updatedCategory = await this.categoryModel.update(data)
 
-      response.status(200).json({ category: updatedCategory })
+      response.status(204).json({ category: updatedCategory })
     } catch (error) {
       next(error)
     }

@@ -33,10 +33,10 @@ model User_details {
 }
 
 model Roles {
-  id           Int           @id @default(autoincrement())
+  id           Int              @id @default(autoincrement())
   name         String
   description  String?
-  permissions  Permissions[]
+  permissions  RolePermission[]
   user_details User_details?
 }
 
@@ -72,9 +72,17 @@ model Product {
 }
 
 model Permissions {
-  id     Int     @id @default(autoincrement())
+  id     Int              @id @default(autoincrement())
   name   String
   active Boolean
-  role   Roles   @relation(fields: [roleId], references: [id])
-  roleId Int
+  roles  RolePermission[]
+}
+
+model RolePermission {
+  role          Roles       @relation(fields: [role_Id], references: [id])
+  role_Id       Int
+  permission    Permissions @relation(fields: [permission_Id], references: [id])
+  permission_Id Int
+
+  @@id([role_Id, permission_Id])
 }
