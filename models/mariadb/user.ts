@@ -1,5 +1,5 @@
 import { PrismaClient, User_accounts } from "@prisma/client"
-import { omitFields, mapToUserDocument } from "../../utils/middleware"
+import { omitFields } from "../../utils/middleware"
 
 export interface UserDocument extends User_accounts {}
 export type CreateUserType = Pick<User_accounts, "username" | "password">

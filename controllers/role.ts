@@ -42,7 +42,7 @@ export class RoleController {
         throw boom.notFound("Role not found")
         return
       }
-      response.json(role)
+      response.status(200).json(role)
     } catch (error) {
       next(error)
     }
@@ -125,7 +125,7 @@ export class RoleController {
 
       const updated = await this.roleModel.update(updatedRole)
 
-      response.json(updated)
+      response.status(204).json(updated)
     } catch (error) {
       next(error)
     }

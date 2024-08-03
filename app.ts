@@ -11,6 +11,7 @@ import { createAuthRouter } from "./routes/auth"
 import { createSupplierRouter } from "./routes/supplier"
 import { createCategoryRoutes } from "./routes/category"
 import { createRoleRouter } from "./routes/role"
+import { createPermissionRouter } from "./routes/permision"
 
 // Swagger
 import swagger from "./swagger"
@@ -20,9 +21,11 @@ import UserModel from "./models/mariadb/user"
 import SupplierModel from "./models/mariadb/supplier"
 import CategoryModel from "./models/mariadb/category"
 import RoleModel from "./models/mariadb/roles"
+import PermissionModel from "./models/mariadb/permission"
 
 const app: Express = express()
 swagger(app)
+const API_VERSION = "/api/v1"
 
 app.use(cors({ credentials: true, origin: true }))
 app.use(bodyParser.json())
@@ -31,28 +34,32 @@ app.disable("x-powered-by")
 app.set("view engine", "ejs")
 
 // Routes
-app.use("/api/v1/auth", createAuthRouter({ userModel: UserModel }))
+app.use(`${API_VERSION}/auth`, createAuthRouter({ userModel: UserModel }))
 app.use(
-  "/api/v1/users",
+  `${API_VERSION}/users`,
   middleware.userExtractor,
   createUserRouter({ userModel: UserModel })
 )
 app.use(
-  "/api/v1/suppliers",
+  `${API_VERSION}/suppliers`,
   middleware.userExtractor,
   createSupplierRouter({ supplierModel: SupplierModel })
 )
-
 app.use(
-  "/api/v1/categories",
+  `${API_VERSION}/permissions`,
+  middleware.userExtractor,
+  createPermissionRouter({ permissionModel: PermissionModel })
+)
+app.use(
+  `${API_VERSION}/categories`,
   middleware.userExtractor,
   createCategoryRoutes({ categoryModel: CategoryModel })
- )
-
-app.use( "/api/v1/roles",
+)
+app.use(
+  `${API_VERSION}/roles`,
   middleware.userExtractor,
   createRoleRouter({ roleModel: RoleModel })
- )
+)
 
 // Middlewares
 app.use(middleware.boomErrorHandler)

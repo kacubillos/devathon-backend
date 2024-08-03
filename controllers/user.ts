@@ -21,7 +21,7 @@ export class UserController {
   ): Promise<void> => {
     try {
       const users = await this.userModel.getAll()
-      response.json(users)
+      response.status(200).json(users)
     } catch (error) {
       next(error)
     }
@@ -46,7 +46,7 @@ export class UserController {
         return
       }
 
-      response.json(user)
+      response.status(200).json(user)
     } catch (error) {
       next(error)
     }
@@ -134,7 +134,7 @@ export class UserController {
 
       const updated = await this.userModel.update(updatedUser)
 
-      response.json(updated)
+      response.status(204).json(updated)
     } catch (error) {
       next(error)
     }
