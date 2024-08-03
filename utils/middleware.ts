@@ -6,7 +6,7 @@ import "./custom-request.d.ts"
 import { createCustomError } from "./customError"
 import { errorHandler, boomErrorHandler } from "./errorHandler"
 import multer from "multer"
-import uuid from "uuid"
+import { v4 as uuid } from "uuid"
 
 export const HTTP_STATUS = {
   BAD_REQUEST: 400,
