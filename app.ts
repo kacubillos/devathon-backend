@@ -12,6 +12,7 @@ import { createSupplierRouter } from "./routes/supplier"
 import { createCategoryRoutes } from "./routes/category"
 import { createRoleRouter } from "./routes/role"
 import { createPermissionRouter } from "./routes/permision"
+import { createDetailsRouter } from "./routes/details"
 
 // Swagger
 import swagger from "./swagger"
@@ -22,6 +23,7 @@ import SupplierModel from "./models/mariadb/supplier"
 import CategoryModel from "./models/mariadb/category"
 import RoleModel from "./models/mariadb/roles"
 import PermissionModel from "./models/mariadb/permission"
+import DetailsModel from "./models/mariadb/deatils"
 
 const app: Express = express()
 swagger(app)
@@ -59,6 +61,15 @@ app.use(
   `${API_VERSION}/roles`,
   middleware.userExtractor,
   createRoleRouter({ roleModel: RoleModel })
+)
+app.use(
+  `${API_VERSION}/details`,
+  middleware.userExtractor,
+  createDetailsRouter({
+    detailsModel: DetailsModel,
+    userModel: UserModel,
+    roleModel: RoleModel
+  })
 )
 
 // Middlewares
