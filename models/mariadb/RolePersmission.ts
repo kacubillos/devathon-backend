@@ -4,7 +4,7 @@ export interface RolePersmissionDocument extends RolePermission {}
 
 export type CreateRolePermissionType = Pick<
   RolePermission,
-  "role_Id" | "permission_Id"
+  "role_Id" | "permission_Id" | "active"
 >
 export type UpdateRolePermissionType = Partial<RolePersmissionDocument>
 
@@ -21,6 +21,7 @@ export interface RolePermissionModelInterface {
   create(data: {
     role_Id: number
     permission_Id: number
+    active: boolean
   }): Promise<RolePersmissionDocument>
   update(
     id: { role_Id: number; permission_Id: number },
