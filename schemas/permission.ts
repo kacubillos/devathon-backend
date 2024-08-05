@@ -1,7 +1,7 @@
 import Joi from "joi"
 
 //permission schema
-const permissionIdSchema = Joi.number().integer().positive().required()
+const permissionIdSchema = Joi.number().integer().positive()
 const permissionNameSchema = Joi.string().optional().max(255)
 const permissionActiveSchema = Joi.boolean().default(false)
 

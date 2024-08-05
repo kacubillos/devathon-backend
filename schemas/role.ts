@@ -1,7 +1,7 @@
 import Joi, { ObjectSchema, StringSchema, NumberSchema } from "joi"
 
 const roleSchema = {
-  id: Joi.number().integer().positive().required() as NumberSchema,
+  id: Joi.number().integer().positive()as NumberSchema,
   name: Joi.string().min(3).max(50).required() as StringSchema,
   description: Joi.string().max(200) as StringSchema
 }

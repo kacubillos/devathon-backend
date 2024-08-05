@@ -56,16 +56,14 @@ export class PermissionController {
     next: NextFunction
   ): Promise<void> => {
     try {
-      const { name, active }: CreatePermissionType = request.body
-
-      if (!name || !active) {
+      const { name }: CreatePermissionType = request.body
+      if (!name) {
         throw boom.badRequest("All data is required")
         return
       }
 
       const newPermission: CreatePermissionType = {
-        name,
-        active
+        name
       }
 
       const createdPermission = await this.permissionModel.create(newPermission)
