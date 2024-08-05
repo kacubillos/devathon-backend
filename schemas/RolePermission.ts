@@ -3,17 +3,19 @@ import Joi from "joi"
 //role permission schema
 const roleIdSchema = Joi.number().integer().positive().required()
 const permissionIdSchema = Joi.number().integer().positive().required()
+const permissionActiveSchema = Joi.boolean().default(false)
 
 //role permission create schema
 const rolePermissionSchema = Joi.object({
   role_Id: roleIdSchema,
-  permission_Id: permissionIdSchema
+  permission_Id: permissionIdSchema,
+  active: permissionActiveSchema
 })
 
 //operation-specific role permission schemas
 const createRolePermissionSchema = rolePermissionSchema.keys({
-  role_Id: roleIdSchema,
-  permission_Id: permissionIdSchema
+  role_Id: roleIdSchema.required(),
+  permission_Id: permissionIdSchema.required()
 })
 
 const updateRolePermissionSchema = createRolePermissionSchema
