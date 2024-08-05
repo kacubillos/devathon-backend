@@ -64,6 +64,7 @@ app.use(
 )
 app.use(
   `${API_VERSION}/role-permission`,
+  middleware.userExtractor,
   CreateRolePersmissionRoutes({ rolePermissionModel: RolePermissionModel })
 )
 
