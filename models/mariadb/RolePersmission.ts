@@ -4,36 +4,36 @@ export interface RolePersmissionDocument extends RolePermission {}
 
 export type CreateRolePermissionType = Pick<
   RolePermission,
-  "role_Id" | "permission_Id" | "active"
+  "role_id" | "permission_id" | "active"
 >
 export type UpdateRolePermissionType = Partial<RolePersmissionDocument>
 
 //importan to use many to many relationship
 export interface CompoundKey {
-  role_Id_permission_Id: {
-    role_Id: number
-    permission_Id: number
+  role_id_permission_id: {
+    role_id: number
+    permission_id: number
   }
 }
 
 export interface RolePermissionModelInterface {
-  getCompoundKey(id: { role_Id: number; permission_Id: number }): CompoundKey
+  getCompoundKey(id: { role_id: number; permission_id: number }): CompoundKey
   create(data: {
-    role_Id: number
-    permission_Id: number
+    role_id: number
+    permission_id: number
     active: boolean
   }): Promise<RolePersmissionDocument>
   update(
     id: { role_Id: number; permission_Id: number },
     data: UpdateRolePermissionType
   ): Promise<RolePersmissionDocument>
-  getPermissionsForRole(role_Id: number): Promise<RolePermission[]>
-  getRolesForPermission(permission_Id: number): Promise<RolePermission[]>
+  getPermissionsForRole(role_id: number): Promise<RolePermission[]>
+  getRolesForPermission(permission_id: number): Promise<RolePermission[]>
   getAllPermissions(): Promise<RolePermission[]>
   getAllRoles(): Promise<RolePermission[]>
   getRolePermission(id: {
-    roleId: number
-    permissionId: number
+    role_id: number
+    permission_id: number
   }): Promise<RolePermission | null>
 }
 
@@ -42,30 +42,29 @@ const prisma = new PrismaClient()
 export default class RolePermissionModel {
   //importan to use many to many relationship
   static getCompoundKey(id: {
-    role_Id: number
-    permission_Id: number
+    role_id: number
+    permission_id: number
   }): CompoundKey {
     return {
-      role_Id_permission_Id: {
-        role_Id: id.role_Id,
-        permission_Id: id.permission_Id
+      role_id_permission_id: {
+        role_id: id.role_id,
+        permission_id: id.permission_id
       }
     }
   }
   static create = async (data: {
-    role_Id: number
-    permission_Id: number
+    role_id: number
+    permission_id: number
+    active: boolean
   }): Promise<RolePersmissionDocument> => {
     const result = await prisma.rolePermission.create({
-      data: {
-        ...data
-      }
+      data: data
     })
     return result
   }
 
   static update = async (
-    id: { role_Id: number; permission_Id: number },
+    id: { role_id: number; permission_id: number },
     data: UpdateRolePermissionType
   ): Promise<RolePersmissionDocument> => {
     const compoundKey = RolePermissionModel.getCompoundKey(id)
@@ -81,10 +80,10 @@ export default class RolePermissionModel {
    * @param role_Id
    * @returns
    */
-  static getPermissionsForRole = async (role_Id: number) => {
+  static getPermissionsForRole = async (role_id: number) => {
     const result = await prisma.rolePermission.findMany({
       where: {
-        role_Id
+        role_id
       },
       include: {
         permission: true
@@ -98,10 +97,10 @@ export default class RolePermissionModel {
    * @param permission_Id
    * @returns
    */
-  static getRolesForPermission = async (permission_Id: number) => {
+  static getRolesForPermission = async (permission_id: number) => {
     const result = await prisma.rolePermission.findMany({
       where: {
-        permission_Id
+        permission_id
       },
       include: {
         role: true
@@ -137,15 +136,15 @@ export default class RolePermissionModel {
   }
 
   static async getRolePermission(id: {
-    roleId: number
-    permissionId: number
+    role_id: number
+    permission_id: number
   }): Promise<RolePermission | null> {
-    const { roleId, permissionId } = id
+    const { role_id, permission_id } = id
     const rolePermission = await prisma.rolePermission.findUnique({
       where: {
-        role_Id_permission_Id: {
-          role_Id: roleId,
-          permission_Id: permissionId
+        role_id_permission_id: {
+          role_id: role_id,
+          permission_id: permission_id
         }
       }
     })

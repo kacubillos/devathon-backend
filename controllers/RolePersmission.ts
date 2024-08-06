@@ -4,6 +4,7 @@ import {
   RolePermissionModelInterface
 } from "../models/mariadb/RolePersmission"
 import boom from "@hapi/boom"
+import rolePermissionSchemas from "../schemas/RolePermission"
 
 export class RolePersmissionController {
   private rolePermissionModel: RolePermissionModelInterface
@@ -21,21 +22,29 @@ export class RolePersmissionController {
     next: NextFunction
   ): Promise<void> => {
     try {
-      const { role_Id, permission_Id }: CreateRolePermissionType = request.body
+      console.log(request.body)
+      const rolePermissions: CreateRolePermissionType[] = request.body
 
-      if (!role_Id || !permission_Id) {
-        throw boom.badRequest("All fields are required")
+      // Validate the input using the updated schema
+      const { error } = rolePermissionSchemas.create.validate(rolePermissions)
+      if (error) {
+        throw boom.badRequest(error.details[0].message)
       }
 
-      const newRolePermission: CreateRolePermissionType = {
-        role_Id,
-        permission_Id
-      }
-
-      const result = await this.rolePermissionModel.create(newRolePermission)
+      const results = await Promise.all(
+        rolePermissions.map(async (rolePermission) => {
+          const { role_id, permission_id, active } = rolePermission
+          const newRolePermission: CreateRolePermissionType = {
+            role_id,
+            permission_id,
+            active
+          }
+          return await this.rolePermissionModel.create(newRolePermission)
+        })
+      )
       response.status(201).json({
         message: "Relation RolePermission created successfully",
-        permission: result
+        permission: results
       })
     } catch (error) {
       next(error)
@@ -80,10 +89,10 @@ export class RolePersmissionController {
     next: NextFunction
   ): Promise<void> => {
     try {
-      const role_Id = parseInt(request.params.role_Id, 10)
+      const role_id = parseInt(request.params.role_id, 10)
 
       const rolePermission =
-        await this.rolePermissionModel.getPermissionsForRole(role_Id)
+        await this.rolePermissionModel.getPermissionsForRole(role_id)
 
       response.status(200).json({
         message: "Role permission found successfully",
