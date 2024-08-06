@@ -17,17 +17,17 @@ export const CreateRolePersmissionRoutes = ({
 
   const router = Router()
   router.post(
-    "/role-permission",
+    "/",
     validatorHandler(rolePermissionSchemas.create, "body"),
     rolePersmissionController.create
   )
   router.put(
-    "/role-permission",
+    "/",
     validatorHandler(rolePermissionSchemas.update, "body"),
     rolePersmissionController.update
   )
   router.get(
-    "/role-permission/:role_Id",
+    "/:role_id",
     validatorHandler(rolePermissionSchemas.getPermissonsForRole, "params"),
     rolePersmissionController.getPermissionsForRole
   )

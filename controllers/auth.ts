@@ -26,13 +26,13 @@ export class AuthController {
       const user = await this.userModel.getByUsername(username)
 
       if (!user) {
-        throw CustomError.NotFound("User not found")
+        throw CustomError.NotFound("Error user or passsword is incorrect")
         return
       }
 
       const isPasswordCorrect = await verifyPassword(password, user.password)
       if (!isPasswordCorrect) {
-        throw CustomError.Unauthorized("Incorrect password")
+        throw CustomError.Unauthorized("Error user or passsword is incorrect")
         return
       }
 

@@ -3,19 +3,16 @@ import Joi from "joi"
 //permission schema
 const permissionIdSchema = Joi.number().integer().positive()
 const permissionNameSchema = Joi.string().optional().max(255)
-const permissionActiveSchema = Joi.boolean().default(false)
 
 //permission create schema
 const permissionSchema = Joi.object({
   id: permissionIdSchema,
-  name: permissionNameSchema,
-  active: permissionActiveSchema
+  name: permissionNameSchema
 })
 
 //operation-specific permission schemas
 const createPermissionSchema = permissionSchema.keys({
-  name: permissionNameSchema,
-  active: permissionActiveSchema
+  name: permissionNameSchema
 })
 
 const updatePermissionSchema = createPermissionSchema
